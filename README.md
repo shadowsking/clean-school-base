@@ -1,4 +1,5 @@
 # clean-school-base
+Учебный проект для редактирования данных в https://github.com/devmanorg/e-diary.git
 
 ### Запуск
 1) Скопировать scripts.py в корневую папку проекта.
