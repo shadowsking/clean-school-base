@@ -7,12 +7,12 @@
 ```
 python .\manage.py shell 
 ```
-3) Заполнить фамилию и имя. Далее скопировать в терминал.
+3) Заполнить ФИО. Далее скопировать в терминал.
 
 ```
-    import scripts
-    child = scripts.get_child("Фамилия Имя")
-    scripts.fix_marks(child) # Исправляет оценки
-    scripts.remove_chastisements(child) # Удаляет замечания 
-    scripts.create_commendation(child, "Математика") # Создает похвалы на уроки
+import scripts
+child = scripts.get_child("ФИО")
+scripts.fix_marks(child) # Исправляет оценки
+scripts.remove_chastisements(child) # Удаляет замечания 
+scripts.create_commendation(child, "Математика") # Создает похвалы на уроки
 ```

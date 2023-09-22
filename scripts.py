@@ -38,15 +38,11 @@ COMMENDATIONS = [
 
 def fix_marks(schoolkid):
     marks = Mark.objects.filter(schoolkid=schoolkid, points__lt=4)
-    for mark in marks:
-        mark.points = randint(4, 5)
-        mark.save()
+    marks.update(points=randint(4, 5))
 
 
 def remove_chastisements(schoolkid):
-    chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
-    for chastisement in chastisements:
-        chastisement.delete()
+    Chastisement.objects.filter(schoolkid=schoolkid).delete()
 
 
 def create_commendation(schoolkid, subject, year_of_study=6, group_letter="А"):
@@ -55,23 +51,30 @@ def create_commendation(schoolkid, subject, year_of_study=6, group_letter="А"):
         group_letter=group_letter,
         subject__title=subject
     )
-    for lesson in lessons:
-        query_params = dict(
-            schoolkid=schoolkid,
-            created=lesson.date,
-            subject=lesson.subject,
-            teacher=lesson.teacher,
-        )
-        commendations = Commendation.objects.filter(**query_params)
-        if commendations:
-            continue
+    if not lessons:
+        return
 
-        commendation = Commendation(
-            text=choice(COMMENDATIONS),
-            **query_params
-        )
-        commendation.save()
+    random_lesson = lessons[randint(0, lessons.count() - 1)]
+    query_params = dict(
+        schoolkid=schoolkid,
+        created=random_lesson.date,
+        subject=random_lesson.subject,
+        teacher=random_lesson.teacher,
+    )
+    commendations = Commendation.objects.filter(**query_params)
+    if commendations:
+        return
+
+    commendations.create(
+        text=choice(COMMENDATIONS),
+        **query_params
+    )
 
 
 def get_child(full_name):
-    return Schoolkid.objects.filter(full_name__contains=full_name).get()
+    try:
+        return Schoolkid.objects.get(full_name__contains=full_name)
+    except Schoolkid.DoesNotExist:
+        print("Такого ученика нет в базе данных. Проверьте корректность ФИО.")
+    except Schoolkid.MultipleObjectsReturned:
+        print("Найдено более одного ученика. Уточните ФИО ученика.")
