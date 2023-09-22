@@ -46,15 +46,14 @@ def remove_chastisements(schoolkid):
 
 
 def create_commendation(schoolkid, subject, year_of_study=6, group_letter="А"):
-    lessons = Lesson.objects.filter(
+    random_lesson = Lesson.objects.filter(
         year_of_study=year_of_study,
         group_letter=group_letter,
         subject__title=subject
-    )
-    if not lessons:
+    ).order_by("?").first()
+    if not random_lesson:
         return
 
-    random_lesson = lessons[randint(0, lessons.count() - 1)]
     query_params = dict(
         schoolkid=schoolkid,
         created=random_lesson.date,
